@@ -37,7 +37,9 @@ s = p4poller.P4Source(
 	p4base='//H15-NAND216-MoutonsGouverneurs',
 	p4user=id.user,
 	p4passwd=id.password,
-	p4port=id.port
+	p4port=id.port,
+	pollinterval=30,
+	p4bin="C:\Program Files\Perforce\p4.exe"
 	)
 c['change_source'] = s
 
@@ -75,11 +77,11 @@ factory.addStep(P4(
 	p4base='//H15-NAND216-MoutonsGouverneurs',
 	p4user=id.user,
 	p4passwd=id.password,
-	p4port=id.port
+	p4port=id.port,
 	mode = "copy"
 	))
 # run the tests (note that this will require that 'trial' is installed)
-factory.addStep(ShellCommand(command="packages.bat"))
+factory.addStep(ShellCommand(command=["echo","test"]))
 
 from buildbot.config import BuilderConfig
 
