@@ -34,13 +34,13 @@ c['protocols'] = {'pb': {'port': 9989}}
 
 from buildbot.changes import p4poller
 s = p4poller.P4Source(
-	p4base='//H15-NAND216-MoutonsGouverneurs',
-	p4user=id.user,
-	p4passwd=id.password,
-	p4port=id.port,
-	pollinterval=30,
-	p4bin="C:\Program Files\Perforce\p4.exe"
-	)
+    p4base='//H15-NAND216-MoutonsGouverneurs',
+    p4user=id.user,
+    p4passwd=id.password,
+    p4port=id.port,
+    pollinterval=30,
+    p4bin="C:\Program Files\Perforce\p4.exe"
+    )
 c['change_source'] = s
 
 
@@ -55,7 +55,7 @@ from buildbot.changes import filter
 c['schedulers'] = []
 c['schedulers'].append(Scheduler(
                             name="standard",
-							branch="",
+                            branch="",
                             builderNames=["packages"]))
 c['schedulers'].append(ForceScheduler(
                             name="force",
@@ -74,12 +74,13 @@ from buildbot.steps.shell import ShellCommand
 factory = BuildFactory()
 # check out the source
 factory.addStep(P4(
-	p4base='//H15-NAND216-MoutonsGouverneurs',
-	p4user=id.user,
-	p4passwd=id.password,
-	p4port=id.port,
-	mode = "copy"
-	))
+    p4base='//H15-NAND216-MoutonsGouverneurs',
+    p4user=id.user,
+    p4passwd=id.password,
+    p4port=id.port,
+    mode = "copy",
+    use_tickets = True,
+    ))
 # run the tests (note that this will require that 'trial' is installed)
 factory.addStep(ShellCommand(command=["echo","test"]))
 
@@ -105,7 +106,7 @@ from buildbot.status.web import authz, auth
 authz_cfg=authz.Authz(
     # change any of these to True to enable; see the manual for more
     # options
-	auth=auth.BasicAuth(map(lambda x:(x,x),names)),
+    auth=auth.BasicAuth(map(lambda x:(x,x),names)),
     gracefulShutdown = False,
     forceBuild = 'auth', # use this to test your slave once it is set up
     forceAllBuilds = 'auth',  # ..or this
