@@ -1,0 +1,2 @@
+set RunUAT="C:\Program Files\Epic Games\4.6\Engine\Build\BatchFiles"
+%RunUAT% BuildCookRun -project="TestDemo\NetworkDemo.uproject" -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -cook -maps=AllMaps -compile -stage -pak -archive -archivedirectory="Output Directory"
