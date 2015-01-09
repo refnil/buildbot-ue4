@@ -34,7 +34,7 @@ c['protocols'] = {'pb': {'port': 9989}}
 
 from buildbot.changes import p4poller
 s = p4poller.P4Source(
-    p4base='//H15-NAND216-MoutonsGouverneurs',
+    p4base=id.base,
     p4user=id.user,
     p4passwd=id.password,
     p4port=id.port,
@@ -49,14 +49,13 @@ c['change_source'] = s
 
 # Configure the Schedulers, which decide how to react to incoming changes.  In this
 # case, just kick off a 'runtests' build
-from buildbot.schedulers.basic import Scheduler
-Scheduler
+from buildbot.schedulers.basic import AnyBranchScheduler
 from buildbot.schedulers.forcesched import ForceScheduler
 from buildbot.changes import filter
 c['schedulers'] = []
-c['schedulers'].append(Scheduler(
+c['schedulers'].append(AnyBranchScheduler(
                             name="standard",
-                            branch="",
+                            treeStableTimer = 10,
                             builderNames=["packages"]))
 c['schedulers'].append(ForceScheduler(
                             name="force",
@@ -69,21 +68,23 @@ c['schedulers'].append(ForceScheduler(
 # only take place on one slave.
 
 from buildbot.process.factory import BuildFactory
-from buildbot.steps.source import P4
+from buildbot.steps.source.p4 import P4
 from buildbot.steps.shell import ShellCommand
+from buildbot.process.properties import WithProperties
 
 factory = BuildFactory()
-# check out the source
 factory.addStep(P4(
-    p4base='//H15-NAND216-MoutonsGouverneurs',
+# check out the source
+    p4client=WithProperties('%(slavename)s-%(buildername)s'),
+    p4base=id.base,
     p4user=id.user,
     p4passwd=id.password,
     p4port=id.port,
-    mode = "copy",
-
+    mode = "incremental",
+    use_tickets=True,
     ))
 # run the tests (note that this will require that 'trial' is installed)
-factory.addStep(ShellCommand(command=["echo","test"]))
+factory.addStep(ShellCommand(command=["package_game.bat"]))
 
 from buildbot.config import BuilderConfig
 
